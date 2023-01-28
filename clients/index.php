@@ -1,10 +1,12 @@
 <?php
 session_start();
 
+$title = 'Clients';
 include '../connect.php';
+include '../header.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../../login.php');
+    header('Location: ../login.php');
     exit;
 }
 
@@ -15,41 +17,28 @@ $stmt_client->execute();
 $clients = $stmt_client->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <?php
-echo '<!doctype html>
-<html lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="../theme.css">
-</sty>
-    <title>Dashboard</title>
-</head>
-<body>
+echo '
+<div class="d-flex justify-content-between align-items-center mt-5 mb-2">
 <h1>Clients</h1>
-<h2>Nombre de clients: ' . count($clients) . '</h2>
-
-<h2><a href="../factures/index.php">Factures</a></h2>
-
-<a href="../logout.php">Logout</a>
-<a href="add.php">+ Ajouter</a>
+<a href="add.php" class="btn btn-primary">Ajouter</a>
+</div>
 ';
 ?>
 <?php
 echo '
-    <table>
-        <thead>
+    <table class="table align-middle mb-0 bg-white">
+        <thead class="bg-light">
             <tr>
-                <td>id</td>
-                <td>image</td>
-                <td>prenom</td>
-                <td>nom</td>
-                <td>num tel</td>
-                <td>email</td>
-                <td>adresse</td>
-                <td>ville</td>
-                <td>code postale</td>
-                <td>actions</td>
+                <td>#</td>
+                <td>Image</td>
+                <td>Prénom</td>
+                <td>Nom</td>
+                <td>Num Tél</td>
+                <td>E-mail</td>
+                <td>Adresse</td>
+                <td>Ville</td>
+                <td>Code postale</td>
+                <td>Actions</td>
             </tr>
         </thead>
         <tbody>
@@ -78,6 +67,7 @@ foreach ($clients as $client) {
 echo '
         </tbody>
     </table>
+    </main>
     </body>
     </html>
     ';

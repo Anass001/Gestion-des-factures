@@ -2,54 +2,42 @@
 
 session_start();
 
-include '../connect.php';
+$title = 'Factures';
+include "../connect.php";
+include '../header.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: ../login.php');
     exit;
 }
 
-$stmt_fact = $pdo->prepare('SELECT * FROM factures');
-$stmt_client = $pdo->prepare('SELECT * FROM clients');
-
+$stmt_fact = $pdo->prepare('SELECT c.prenom, df.quantite, df.prix, f.* FROM clients c 
+    JOIN factures f on c.id = f.id_client JOIN details_factures df on df.id_facture = f.id');
 $stmt_fact->execute();
-$stmt_client->execute();
 
 $factures = $stmt_fact->fetchAll(PDO::FETCH_ASSOC);
-$clients = $stmt_client->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <?php
-echo '<!doctype html>
-<html lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="../theme.css">
-</sty>
-    <title>Dashboard</title>
-</head>
-<body>
+echo '
+<div class="d-flex justify-content-between align-items-center mt-5 mb-2">
 <h1>Factures</h1>
-<h2>Nombre de factures: ' . count($factures) . '</h2>
-
-<h2><a href="../clients/index.php">Clients</a></h2>
-<a href="../logout.php">Logout</a>
-<a href="add.php">+ Ajouter</a>
+<a href="add.php" class="btn btn-primary">Ajouter</a>
+</div>
 ';
 ?>
 <?php
 echo '
-    <table>
-        <thead>
+    <table class="table align-middle mb-0 bg-white">
+        <thead class="bg-light">
             <tr>
-                <td>id</td>
-                <td>date</td>
-                <td>client</td>
-                <td>total</td>
-                <td>paid</td>
-                <td>actions</td>
+                <th>#</th>
+                <th>Date</th>
+                <th>Client</th>
+                <th>Quantité</th>
+                <th>Prix</th>
+                <th>Status</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -60,15 +48,9 @@ foreach ($factures as $facture) {
             <tr>
                 <td>' . $facture['id'] . '</td>
                 <td>' . $facture['date_facture'] . '</td>
-                <td>' ?>
-    <?php foreach ($clients as $client) {
-        if ($client['id'] == $facture['id_client']) {
-            echo $client['prenom'] . ' ' . $client['nom'];
-        }
-    } ?>
-    <?php echo
-        '</td>
-                <td>' . $facture['montant_total'] . '</td>
+                <td>' . $facture['prenom'] . '</td>
+                <td>' . $facture['quantite'] . '</td>
+                <td>' . $facture['prix'] . '</td>
                 <td>' . $facture['status'] . '</td>
                 <td>
                     <a href="edit.php?id=' . $facture['id'] . '">Edit</a>
@@ -81,6 +63,7 @@ foreach ($factures as $facture) {
 echo '
         </tbody>
     </table>
+    </main>
     </body>
     </html>
     ';

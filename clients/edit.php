@@ -1,52 +1,79 @@
 <?php
 session_start();
 
-include '../connect.php';
-
+$title = 'Modifier un client';
+include "../connect.php";
+include '../header.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: ../login.php');
     exit;
 }
 
+$id = $_GET['id'];
 $stmt_client = $pdo->prepare('SELECT * FROM clients WHERE id = ?');
-$stmt_client->execute([$_GET['id']]);
+$stmt_client->execute([$id]);
 $client = $stmt_client->fetch(PDO::FETCH_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $stmt_update = $pdo->prepare('UPDATE clients SET prenom = ?, nom = ?, num_tel = ?, email = ?, adresse = ?, ville = ?, code_postale = ? WHERE id = ?');
-    $stmt_update->execute([$_POST['prenom'], $_POST['nom'], $_POST['num_tel'], $_POST['email'], $_POST['adresse'], $_POST['ville'], $_POST['code_postale'], $_POST['id']]);
+    $stmt = $pdo->prepare('UPDATE clients SET image = ?, prenom = ?, nom = ?, num_tel = ?, email = ?, adresse = ?, ville = ?, code_postale = ? WHERE id = ?');
+    $stmt->execute([$_POST['image'], $_POST['prenom'], $_POST['nom'], $_POST['num_tel'], $_POST['email'], $_POST['adresse'], $_POST['ville'], $_POST['code_postale'], $id]);
+
     header('Location: index.php');
     exit;
 }
 ?>
 
 <?php
-echo '<!doctype html>
-<html lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="../theme.css">
-</sty>
-    <title>Dashboard</title>
-</head>
-<body>
-<h1>Editer client</h1>
+echo '
+<div class="d-flex justify-content-between align-items-center mt-5 mb-2">
+<h1>Modifier un client</h1>
+</div>
+';
+?>
 
-<form action="edit.php" method="post">
-    <input type="hidden" name="id" value="' . $client['id'] . '">
-    <input type="text" name="prenom" value="' . $client['prenom'] . '">
-    <input type="text" name="nom" value="' . $client['nom'] . '">
-    <input type="text" name="num_tel" value="' . $client['num_tel'] . '">
-    <input type="text" name="email" value="' . $client['email'] . '">
-    <input type="text" name="adresse" value="' . $client['adresse'] . '">
-    <input type="text" name="ville" value="' . $client['ville'] . '">
-    <input type="text" name="code_postale" value="' . $client['code_postale'] . '">
-    <input type="submit" value="Save">
-</form>
+<?php
+echo '
+<section class="container">
+    <form action="edit.php" method="post" class="row">    
+        <div class="form-group mt-3">
+            <label for="">Path to image</label>
+            <input class="form-control" type="text" name="image" value="'.$client['image'].'">
+        </div>
+        <div class="form-group mt-3">
+            <label for="">Prénom</label>
+            <input class="form-control" type="text" name="prenom" value="'.$client['prenom'].'">
+        </div>
+        <div class="form-group mt-3">
+            <label for="">Nom</label>
+            <input class="form-control" type="text" name="nom" value="'.$client['nom'].'">
+        </div>
+        <div class="form-group mt-3">
+            <label for="">Numéro de téléphone</label>
+            <input class="form-control" type="tel" name="num_tel" value="'.$client['num_tel'].'">
+        </div>
+        <div class="form-group mt-3">
+            <label for="">Email</label>
+            <input class="form-control" type="email" name="email" value="'.$client['email'].'">
+        </div>
+        <div class="form-group mt-3">
+            <label for="">Adresse</label>
+            <input class="form-control" type="text" name="adresse" value="'.$client['adresse'].'">
+        </div>
+        <div class="form-group mt-3">
+            <label for="">Ville</label>
+            <input class="form-control" type="text" name="ville" value="'.$client['ville'].'">
+        </div>
+        <div class="form-group mt-3">
+            <label for="">Code postal</label>
+            <input class="form-control" type="number" name="code_postale" value="'.$client['code_postale'].'">   
+        </div>
+        <div class="mt-5 mb-5 row g-3 justify-content-end align-items-end d-flex">
+                    <a class="btn btn-outline-primary col-2 me-2" href="index.php">Annuler</a>
+            <input class="btn btn-primary col-3" type="submit" value="Save">
+        </div>
+    </form>
 
-<a href="index.php">Annuler</a>
+</section>
 ';
 ?>
