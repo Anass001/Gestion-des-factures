@@ -27,6 +27,3 @@ Gestion des factures est un projet PHP qui permet aux utilisateurs de gérer les
 
 ## Contribuant
 Les contributions sont les bienvenues! Veuillez soumettre un pull request avec vos modifications.
-
-## Licence
-Ce projet est sous licence MIT.
