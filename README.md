@@ -26,7 +26,7 @@ Gestion des factures est un projet PHP qui permet aux utilisateurs de gérer les
 3. Pour gérer les clients, accédez à la page des clients, où vous pouvez afficher, créer, modifier et supprimer des clients.
 
 ## Contribuant
-Les contributions sont les bienvenues ! Veuillez soumettre une demande d'extraction avec vos modifications.
+Les contributions sont les bienvenues! Veuillez soumettre un pull request avec vos modifications.
 
 ## Licence
 Ce projet est sous licence MIT.
